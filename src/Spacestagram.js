@@ -1,10 +1,12 @@
-import logo from './logo.svg';
 import './App.css';
 import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCog, faHeart as fHeart, faSearch, faTimes } from '@fortawesome/free-solid-svg-icons'
+import { faHeart as oHeart } from '@fortawesome/free-regular-svg-icons'
+
 var settings = require('./config.json');
 
-const ROVERS = ['curiosity', 'opportunity', 'spirit'];
 const PAGE_LIMIT = 25;
 const fetchIMGS = (params) => {
   return (
@@ -28,55 +30,110 @@ const formatDate = (date) => {
   return date.toISOString().split('T')[0];
 }
 
-const Card = ({data, liked}) => {
-  
+const Card = ({data, liked, toggleModal, setModalData}) => {
+  const [isLiked, setIsLiked] = useState(liked);
+
+  const handleModal = () => {
+    setModalData(data);
+    toggleModal(true);
+  }
   return (
     <div className="card">
-      {/* <div className="card-title">{data.copyright || "NASA"}</div> */}
-      {/* <div className="card-photo"> */}
-      <img className="card-photo" src={data.hdrul || data.url}/>
-      {/* </div> */}
-      {/* <h5>
-        Taken on {data.date}
-      </h5> */}
+      <div className="card-info">
+        {/* <div className="card-title">{data.title}</div> */}
+        {data.copyright && <div className="card-owner">{data.copyright}</div>}
+
+        <button className="card-desc-btn btn" onClick={() => handleModal()}>
+          <FontAwesomeIcon icon={faSearch}/>
+        </button>
+        <button className="card-like-btn btn" onClick={() => setIsLiked(!isLiked)}>
+          <FontAwesomeIcon icon={isLiked ? fHeart : oHeart}/>
+        </button>
+      </div>
+      <img alt={data.title} className="card-photo" src={data.hdrul || data.url}/>
     </div>
   );
 }
 
 Card.propTypes = {
   data: PropTypes.object.isRequired,
-  liked: PropTypes.bool
+  liked: PropTypes.bool,
+  toggleModal: PropTypes.func.isRequired,
+  setModalData: PropTypes.func.isRequired
+
 }
 
 Card.defaultProps = {
   liked: false
 }
 
+const PhotoModal = ({data, visible, setVisible}) => {
+  if(!data) {
+    return null;
+  }
+
+  return (
+    <div id="modal-wrapper" className={visible ? "visible" : "hidden"}>
+      <div id="modal">
+        <button className="modal-close-btn btn" onClick={() => setVisible(false)}>
+          <FontAwesomeIcon icon={faTimes}/>
+        </button>
+        <div className="modal-image">
+          <img alt={data.title} src={data.hdrul || data.url}/>
+        </div>
+        <div className="modal-info">
+          <div>
+            <h3>{data.title}</h3>
+            {data.copyright && <h5>{data.copyright}</h5>}
+            <article>
+              <p>{data.explanation}</p>
+            </article>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+PhotoModal.propTypes = {
+  data: PropTypes.object.isRequired,
+  visible: PropTypes.bool.isRequired,
+  setVisible: PropTypes.func.isRequired
+}
+
+
+
 const Spacestagram = () => {
   const [photos, setPhotos] = useState(null);
   const [isFetching, setIsFetching] = useState(true);
   const [oldest, setOldest] = useState(new Date());
   const [scrollPosition, setScrollPosition] = useState(0);
-
+  const [modalData, setModalData] = useState();
+  const [modalVisibility, setModalVisibility] = useState(false);
   const handleScroll = () => {
     const position = window.pageYOffset;
     setScrollPosition(position);
   };
 
   useEffect(() => {
+    console.log(photos);
     if(isFetching) {
       const end_date = oldest;
+      if(photos) {
+        end_date.setDate(end_date.getDate() - 1);
+      }
       const start_date = new Date(end_date);
-      start_date.setDate(oldest.getDate() - PAGE_LIMIT + 1);
+
+      start_date.setDate(oldest.getDate() - PAGE_LIMIT);
       fetchIMGS(`end_date=${formatDate(end_date)}&start_date=${formatDate(start_date)}`).then(data => {
         setIsFetching(false);
+        setOldest(start_date);
         if(photos) {
           setPhotos([...photos, ...data.reverse()]);
         } else {
           setPhotos(data.reverse());
         }
 
-        setOldest(start_date);
       });
     }
   }, [oldest, isFetching, photos]);
@@ -91,7 +148,7 @@ const Spacestagram = () => {
 
   
   useEffect(() => {
-    if(scrollPosition / window.innerHeight > 0.60 && !isFetching) {
+    if(scrollPosition / document.body.clientHeight > 0.60 && !isFetching) {
       setIsFetching(true);
     }
   }, [scrollPosition]);
@@ -99,11 +156,23 @@ const Spacestagram = () => {
 
   return (
     <div className="Spacestagram">
+      <PhotoModal data={modalData} visible={modalVisibility} setVisible={setModalVisibility}/>
+
       <main>
         {photos && Object.values(photos).map((photo) => {
-          return(<Card data={photo}/>)
+          return(<Card data={photo} toggleModal={setModalVisibility} setModalData={setModalData}/>)
         })}
       </main>
+      <footer>
+        {isFetching && 
+          <>
+            <div className="loading">
+              <FontAwesomeIcon icon={faCog} spin/>
+            </div>
+            <p>Loading...</p>
+          </>
+        }
+      </footer>
     </div>
   );
 }

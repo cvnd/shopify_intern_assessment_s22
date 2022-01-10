@@ -22,8 +22,37 @@ img.card-photo {
 div.card {
   height: 15em;
   flex-grow: 1;
+  position: relative;
 }
 
+div.card-info {
+  width: 100%;
+  height: 2.5em;
+  position: absolute;
+  color: white;
+  bottom: 0;
+  align-items: center;
+  display: grid;
+  grid-template-columns: calc(100% - 5em) 2em 3em;
+}
+
+.btn {
+  background: none;
+  border: none;
+  color: white;
+}
+
+button.card-desc-btn {
+  grid-column: 2 / 3;
+}
+button.card-like-btn {
+  grid-column: 3 / 4;
+}
+
+button.modal-close-btn {
+  position: absolute;
+  padding: 1em;
+}
 main {
   display: flex;
   flex-wrap: wrap;
@@ -32,5 +61,78 @@ main {
   width: 100%;
   gap: 0.5em;
   box-sizing: border-box;
-  background: #2b1f1f;
+}
+
+footer {
+  width: fit-content;
+  margin: auto;
+  text-transform: uppercase;
+  font-size: 0.8em;
+  letter-spacing: 0.1rem;
+  font-weight: bold;
+}
+
+footer p {
+  color: grey;
+
+}
+.loading {
+  font-size: 2.5em;
+  width: fit-content;
+  height: fit-content;
+  margin: auto;
+}
+
+div#modal-wrapper {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  align-items: center;
+  justify-items: center;
+  position: fixed;
+  z-index: 99;
+  box-sizing: border-box;
+  background-color: #0000008f;
+}
+
+div#modal {
+  width: 90%;
+  height: 80%;
+  display: flex;
+  overflow: hidden;
+  background: white;
+}
+
+div.modal-image {
+  flex-grow: 1;
+}
+
+.visible {
+  visibility: visible;
+}
+
+.hidden {
+  visibility: hidden;
+}
+
+div.modal-image img {
+  min-height: 100%;
+  flex-shrink: 0;
+  max-height: 100%;
+  min-width: 100%;
+  object-fit: cover;
+  vertical-align: bottom;
+}
+
+div.modal-info {
+  justify-content: flex-end;
+  /* display: flex; */
+  flex-direction: column;
+  padding: 3em;
+  box-sizing: border-box;
+  overflow-y: scroll;
+}
+
+div.modal-info p {
+  font-size: 0.7em;
 }
