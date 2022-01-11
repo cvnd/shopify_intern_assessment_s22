@@ -5,6 +5,7 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  font-size: 0.9em;
 }
 
 code {
@@ -23,6 +24,15 @@ div.card {
   height: 15em;
   flex-grow: 1;
   position: relative;
+  transition: all 2s;
+
+}
+
+div.card:hover div.card-info {
+  background: rgb(0,0,0);
+  background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgb(0 0 0 / 87%) 82%);
+  transition: 0.5s ease;
+
 }
 
 div.card-info {
@@ -34,6 +44,7 @@ div.card-info {
   align-items: center;
   display: grid;
   grid-template-columns: calc(100% - 5em) 2em 3em;
+  transition: opacity 0.5s ease;
 }
 
 .btn {
@@ -49,6 +60,14 @@ button.card-like-btn {
   grid-column: 3 / 4;
 }
 
+footer.first-loading {
+  box-sizing: border-box;
+  height: 92vh;
+  width: 100vw;
+  display: grid;
+  align-items: center;
+  justify-content: center;
+}
 button.modal-close-btn {
   position: absolute;
   padding: 1em;

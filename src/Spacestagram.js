@@ -30,13 +30,29 @@ const formatDate = (date) => {
   return date.toISOString().split('T')[0];
 }
 
-const Card = ({data, liked, toggleModal, setModalData}) => {
-  const [isLiked, setIsLiked] = useState(liked);
+const Card = ({data, toggleModal, setModalData}) => {
+  const [isLiked, setIsLiked] = useState(false);
 
   const handleModal = () => {
     setModalData(data);
     toggleModal(true);
   }
+
+  useEffect(() => {
+    const url = data.hdrul || data.url;
+    const liked = window.localStorage.getItem(url);
+    if(!liked) {
+      window.localStorage.setItem(url, false);
+    } else {
+      setIsLiked(JSON.parse(liked))
+    }
+  }, []);
+
+  useEffect(() => {
+    const url = data.hdrul || data.url;
+    window.localStorage.setItem(url, isLiked);
+  }, [isLiked]);
+  
   return (
     <div className="card">
       <div className="card-info">
@@ -57,15 +73,11 @@ const Card = ({data, liked, toggleModal, setModalData}) => {
 
 Card.propTypes = {
   data: PropTypes.object.isRequired,
-  liked: PropTypes.bool,
   toggleModal: PropTypes.func.isRequired,
   setModalData: PropTypes.func.isRequired
 
 }
 
-Card.defaultProps = {
-  liked: false
-}
 
 const PhotoModal = ({data, visible, setVisible}) => {
   if(!data) {
@@ -73,7 +85,7 @@ const PhotoModal = ({data, visible, setVisible}) => {
   }
 
   return (
-    <div id="modal-wrapper" className={visible ? "visible" : "hidden"}>
+    <div id="modal-wrapper" className={visible ? "visible" : "hidden"} onClick={() => setVisible(false)}>
       <div id="modal">
         <button className="modal-close-btn btn" onClick={() => setVisible(false)}>
           <FontAwesomeIcon icon={faTimes}/>
@@ -84,7 +96,7 @@ const PhotoModal = ({data, visible, setVisible}) => {
         <div className="modal-info">
           <div>
             <h3>{data.title}</h3>
-            {data.copyright && <h5>{data.copyright}</h5>}
+            {data.copyright && <h5>by {data.copyright}</h5>}
             <article>
               <p>{data.explanation}</p>
             </article>
@@ -163,14 +175,14 @@ const Spacestagram = () => {
           return(<Card data={photo} toggleModal={setModalVisibility} setModalData={setModalData}/>)
         })}
       </main>
-      <footer>
-        {isFetching && 
-          <>
+      <footer className={photos ? "" : "first-loading"}>
+        {(isFetching || !photos ) &&
+          <div className="loading-wrapper">
             <div className="loading">
               <FontAwesomeIcon icon={faCog} spin/>
             </div>
             <p>Loading...</p>
-          </>
+          </div>
         }
       </footer>
     </div>
