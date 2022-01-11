@@ -28,11 +28,25 @@ div.card {
 
 }
 
+div.card-owner {
+  padding: 0 0 1em 1em;
+  font-size: 0.8em;
+  opacity: 0;
+  transition: all 0.3s;
+  position: absolute;
+  width: calc(100% - 7em);
+  box-sizing: border-box;
+  display: flex;
+  align-self: flex-end;
+}
+
 div.card:hover div.card-info {
   background: rgb(0,0,0);
   background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgb(0 0 0 / 87%) 82%);
-  transition: 0.5s ease;
+}
 
+div.card:hover div.card-owner {
+  opacity: 100;
 }
 
 div.card-info {
@@ -44,7 +58,7 @@ div.card-info {
   align-items: center;
   display: grid;
   grid-template-columns: calc(100% - 5em) 2em 3em;
-  transition: opacity 0.5s ease;
+  transition: all 2s;
 }
 
 .btn {
@@ -154,4 +168,8 @@ div.modal-info {
 
 div.modal-info p {
   font-size: 0.7em;
+}
+
+.Spacestagram {
+  overflow-x: hidden;
 }

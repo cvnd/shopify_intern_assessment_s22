@@ -66,7 +66,7 @@ const Card = ({data, toggleModal, setModalData}) => {
           <FontAwesomeIcon icon={isLiked ? fHeart : oHeart}/>
         </button>
       </div>
-      <img alt={data.title} className="card-photo" src={data.hdrul || data.url}/>
+      <img onClick={() => handleModal()} alt={data.title} className="card-photo" src={data.hdrul || data.url}/>
     </div>
   );
 }
