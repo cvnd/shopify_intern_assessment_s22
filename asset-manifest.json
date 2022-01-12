@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/shopify_intern_assessment_s22/static/css/main.f353fc9b.css",
+    "main.js": "/shopify_intern_assessment_s22/static/js/main.1e042121.js",
+    "static/js/787.94057123.chunk.js": "/shopify_intern_assessment_s22/static/js/787.94057123.chunk.js",
+    "index.html": "/shopify_intern_assessment_s22/index.html",
+    "main.f353fc9b.css.map": "/shopify_intern_assessment_s22/static/css/main.f353fc9b.css.map",
+    "main.1e042121.js.map": "/shopify_intern_assessment_s22/static/js/main.1e042121.js.map",
+    "787.94057123.chunk.js.map": "/shopify_intern_assessment_s22/static/js/787.94057123.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.f353fc9b.css",
+    "static/js/main.1e042121.js"
+  ]
+}
