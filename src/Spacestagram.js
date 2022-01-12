@@ -1,5 +1,5 @@
 import './App.css';
-import { useEffect, useState } from 'react';
+import { useEffect, useState} from 'react';
 import PropTypes from 'prop-types'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCog, faHeart as fHeart, faRocket, faSearch, faTimes, faArrowLeft, faArrowRight, faChevronDown } from '@fortawesome/free-solid-svg-icons'
@@ -196,14 +196,14 @@ const Spacestagram = () => {
   const [photos, setPhotos] = useState(null);
   const [isFetching, setIsFetching] = useState(true);
   const [endDate, setEndDate] = useState(new Date());
-  const [startDate, setStartDate] = useState(new Date());
+  const [startDate, setStartDate] = useState(null);
   const [scrollPosition, setScrollPosition] = useState(0);
   const [modalData, setModalData] = useState();
   const [modalVisibility, setModalVisibility] = useState(false);
   const [error, setError] = useState(null);
   const [sort, setSort] = useState(DATE_DESCENDING);
   const [filterError, setFilterError] = useState(null);
-  
+
   const fetchIMGS = (params) => {
     return (
       fetch(`https://api.nasa.gov/planetary/apod?api_key=${settings.api_key}&${params}`, {
@@ -247,16 +247,16 @@ const Spacestagram = () => {
       const start_date = new Date(end_date);
 
       start_date.setDate(endDate.getDate() - PAGE_LIMIT);
-      // fetchIMGS(`end_date=${formatDate(end_date)}&start_date=${formatDate(start_date)}`).then(data => {
-      //   setIsFetching(false);
-      //   setEndDate(start_date);
-      //   if(photos) {
-      //     setPhotos([...photos, ...data.reverse()]);
-      //   } else {
-      //     setPhotos(data.reverse());
-      //   }
+      fetchIMGS(`end_date=${formatDate(end_date)}&start_date=${formatDate(start_date)}`).then(data => {
+        setIsFetching(false);
+        setEndDate(start_date);
+        if(photos) {
+          setPhotos([...photos, ...data.reverse()]);
+        } else {
+          setPhotos(data.reverse());
+        }
 
-      // });
+      });
     }
   }, [sort, startDate, endDate, isFetching, photos]);
 
@@ -293,7 +293,11 @@ const Spacestagram = () => {
   useEffect(() => {
     if(endDate < startDate) {
       setFilterError("End date can't be earlier than start date");
+      return;
     }
+    setFilterError(null)
+    setIsFetching(true);
+
   }, [startDate, endDate]);
 
   return (
@@ -305,7 +309,7 @@ const Spacestagram = () => {
           <h1>spacestagram</h1>
         </div>
         <p><i>brought to you by NASA</i></p>
-        <div id='controls'>
+        {/* <div id='controls'>
           <ul className='controls-options'>
             <li className="sort-selection">
               <label>Sort by</label>
@@ -321,13 +325,14 @@ const Spacestagram = () => {
             <li className="date-selection">
               <label>To</label>
               <Calendar currentDate={startDate} setDate={(date) => setStartDate(date)}/>
-              {/* <DatePicker dateFormat="yyyy/MM/dd" selected={startDate} onChange={(date) => console.log(date)} /> */}
               <label>From</label>
-              {/* <DatePicker dateFormat="yyyy/MM/dd" selected={endDate} onChange={(date) => console.log(date)} /> */}
               <Calendar currentDate={endDate} setDate={(date) => setEndDate(date)}/>
             </li>
           </ul>
-        </div>
+          <div className="controls-error">
+            <p>{error}</p>
+          </div>
+        </div> */}
       </header>
       <main >
         {photos && Object.values(photos).map((photo) => {
